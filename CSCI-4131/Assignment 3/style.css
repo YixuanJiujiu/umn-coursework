@@ -2,7 +2,6 @@ table
 {
 	width: auto;
 	border: 1px solid black;
-	border-collapse: collapse;
 	margin-left: auto; 
 	margin-right: auto;
 }
@@ -22,7 +21,7 @@ h1
 
 h4
 {
-    font-weight: normal;
+    font-weight: bold;
     font-style: italic;
 }
 
@@ -64,5 +63,6 @@ form
     margin-right: auto;
 }
 
-tr:nth-child(odd){background-color: #00ffaa}
-tr:nth-child(even){background-color: lightskyblue}
+td:nth-child(1){background-color: mediumorchid}     /* Sets first column of table to unique color. */
+tr:nth-child(odd){background-color: #00ffaa}        /* Sets odd rows of table to unique color. */
+tr:nth-child(even){background-color: lightskyblue}  /* Sets even rows of table to unique color. */

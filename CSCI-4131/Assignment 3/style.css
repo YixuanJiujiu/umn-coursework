@@ -1,0 +1,68 @@
+table 
+{
+	width: auto;
+	border: 1px solid black;
+	border-collapse: collapse;
+	margin-left: auto; 
+	margin-right: auto;
+}
+
+td 
+{ 
+	border: 1px solid black;
+	text-align: center;
+	padding: 15px;
+}
+
+h1 
+{
+	text-align: center;
+    font-weight: bold;
+}
+
+h4
+{
+    font-weight: normal;
+    font-style: italic;
+}
+
+caption 
+{
+	caption-side: bottom;
+	text-align: center;
+    font-style: italic;
+}
+
+body 
+{
+    background-color: darkslategray;
+
+}
+
+div 
+{
+    text-align: center;
+}
+
+nav
+{
+    background-color: antiquewhite;
+    text-align: center;
+}
+
+span
+{
+    font-weight: bold;
+}
+
+form
+{
+    background-color: #00ffaa;
+    text-align: left;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+tr:nth-child(odd){background-color: #00ffaa}
+tr:nth-child(even){background-color: lightskyblue}

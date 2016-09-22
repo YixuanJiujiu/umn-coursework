@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8">
+		<title>Form Input</title>
+		<link rel = "stylesheet" type = "text/css" href = "style.css">
+	</head>
+
+	<body>
+		<h1>Calendar Input</h1>
+        
+        <div>
+            <nav>
+                <a href="calendar.html">My Calendar</a>
+                </nav>
+        </div>
+        
+        <div>
+		    <form method = "get" action = "https://www-users.cselabs.umn.edu/~sharm398/index.php">
+                <p><label>Event Name
+                    <input name = "eventname" type = "text">
+                    </label></p>
+                
+                <p><label>Start Time
+                    <input name = "starttime" type = "time" value = "16:00">
+                    </label></p>
+                
+                <p><label>End Time
+                    <input name = "endtime" type = "time">
+                    </label></p>
+                
+                <p><label>Location
+                    <input name = "location" type = "text">
+                    </label></p>
+                
+                <p><label>Day of the week
+                    <select name = "day">
+                        <option selected>Mon</option>
+                        <option>Tue</option>
+                        <option>Wed</option>
+                        <option>Thu</option>
+                        <option>Fri</option>
+                        <option>Sat</option>
+                        <option>Sun</option>
+                        </select>
+                        </label></p>
+                <p>
+                    <input type = "submit" value = "Submit">
+                    </p>
+		    </form>
+        </div>
+	</body>
+</html>

@@ -5,16 +5,85 @@
         <meta charset = "utf-8">
         <title>Fall 2016 Schedule</title>
         <link rel = "stylesheet" type = "text/css" href = "style.css">
+        <script>
+            var seperator = " ::::: ";
+            var initmsg = "Events for the day"
+            
+            window.onload = function displayanimation() 
+            {
+                var moninfo = initmsg + seperator + document.getElementById("m00").textContent + ", " + document.getElementById("m01").textContent + seperator + document.getElementById("m02").textContent + ", " + document.getElementById("m03").textContent + seperator + document.getElementById("m04").textContent + ", " + document.getElementById("m05").textContent;
+                
+                var tueinfo = initmsg + seperator + document.getElementById("tu00").textContent + ", " + document.getElementById("tu01").textContent + seperator + document.getElementById("tu02").textContent + ", " + document.getElementById("tu03").textContent + seperator + document.getElementById("tu04").textContent + ", " + document.getElementById("tu05").textContent;
+                
+                var wedinfo = moninfo;
+                var thuinfo = tueinfo;
+                
+                var friinfo = initmsg + seperator + document.getElementById("f00").textContent + ", " + document.getElementById("f01").textContent + seperator + document.getElementById("f02").textContent + ", " + document.getElementById("f03").textContent;
+                
+                switch(new Date().getDay())
+                {
+                    case 0:
+                        document.getElementById("animtext").innerHTML = "No events on Sunday";
+                        break;
+                    case 1:
+                        document.getElementById("animtext").innerHTML = moninfo;
+                        document.getElementById("im0").src = "images/kh0.jpg";
+                        document.getElementById("im1").src = "images/kh1.jpg";
+                        document.getElementById("im2").src = "images/kh2.jpg";
+                        document.getElementById("im3").src = "images/lasx.jpeg";
+                        break;
+                    case 2:
+                        document.getElementById("animtext").innerHTML = tueinfo;
+                        document.getElementById("im0").src = "images/kh0.jpg";
+                        document.getElementById("im1").src = "images/sts0.jpg";
+                        document.getElementById("im2").src = "images/sts1.jpg";
+                        document.getElementById("im3").src = "images/lasx.jpeg";
+                        break;
+                    case 3:
+                        document.getElementById("animtext").innerHTML = wedinfo;
+                        document.getElementById("im0").src = "images/kh0.jpg";
+                        document.getElementById("im1").src = "images/kh1.jpg";
+                        document.getElementById("im2").src = "images/kh2.jpg";
+                        document.getElementById("im3").src = "images/lasx.jpeg";
+                        break;
+                    case 4:
+                        document.getElementById("animtext").innerHTML = thuinfo;
+                        document.getElementById("im0").src = "images/kh0.jpg";
+                        document.getElementById("im1").src = "images/sts0.jpg";
+                        document.getElementById("im2").src = "images/sts1.jpg";
+                        document.getElementById("im3").src = "images/lasx.jpeg";
+                        break;
+                    case 5:
+                        document.getElementById("animtext").innerHTML = friinfo;
+                        document.getElementById("im0").src = "images/kh1.jpg";
+                        document.getElementById("im1").src = "images/kh1.jpg";
+                        document.getElementById("im2").src = "images/kh2.jpg";
+                        document.getElementById("im3").src = "images/lasx.jpeg";
+                        break;
+                    case 6:
+                        document.getElementById("animtext").innerHTML = "No events on Saturday";
+                    default:
+                        document.getElementById("animtext").innerHTML = "default case was not supposed to be reached";
+                        break;
+                }
+            }
+        </script>
     </head>
     <body>
         <h1>My Calendar</h1>
         <div>
             <nav>
-                <a href="form.html">Form Input</a>
+                <!--<a href="form.html">Form Input</a>-->
+                <a href="form.html" class="button">Form Input</a>
             </nav>
+            <div id ="animcontainer">
+                <!--<span>YOU SHOULD NOT SEE THIS!!!</span>-->
+                <!--<marquee id = "animtext">YOU SHOULD NOT SEE THIS!!!</marquee>-->
+                <p class = "anim"><span id = "animtext">YOU SHOULD NOT SEE THIS!!!</span></p>
+            </div>
         </div>
         <div>
-            <table style="float:center">
+            <table >
                 <caption>
                     <br>
                     This page has been verified with Google Chrome 53
@@ -24,16 +93,16 @@
                         <span>MON</span>
                     </td>
                     <td>
-                        <h4>8:30 - 10:30 AM</h4>
-                        <a href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                        <h4 id = "m00">8:30 - 10:30 AM</h4>
+                        <a id = "m01" href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
                     </td>
                     <td>
-                        <h4>11:15 - 12:30 PM</h4>
-                        CSCI 5801 : KH 3-230
+                        <h4 id = "m02">11:15 - 12:30 PM</h4>
+                        <p id = "m03">CSCI 5801 : KH 3-230</p>
                     </td>
                     <td>
-                        <h4>4:00 - 5:15 PM</h4>
-                        CSCI 5103 : KH 3-115
+                        <h4 id = "m04">4:00 - 5:15 PM</h4>
+                        <p id = "m05">CSCI 5103 : KH 3-115</p>
                     </td>
                 </tr>
                 <tr>
@@ -41,16 +110,16 @@
                         <span>TUE</span>
                     </td>
                     <td>
-                        <h4>11:15 - 12:30 PM</h4>
-                        CSCI 4041 : KH 3-210
+                        <h4 id = "tu00">11:15 - 12:30 PM</h4>
+                        <p id = "tu01">CSCI 4041 : KH 3-210</p>
                     </td>
                     <td>
-                        <h4>2:30 - 3:45 PM</h4>
-                        CSCI 4131 : BH 230
+                        <h4 id = "tu02">2:30 - 3:45 PM</h4>
+                        <p id = "tu03">CSCI 4131 : BH 230</p>
                     </td>
                     <td>
-                        <h4>4:30 - 6:30 PM</h4>
-                        <a href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                        <h4 id = "tu04">4:30 - 6:30 PM</h4>
+                        <a id = "tu05" href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
                     </td>
                 </tr>
                 <tr>
@@ -91,18 +160,40 @@
                         <span>FRI</span>
                     </td>
                     <td>
-                        <h4>10:10 - 11:00 AM</h4>
-                        CSCI 4041 : KH 2-260
+                        <h4 id = "f00">10:10 - 11:00 AM</h4>
+                        <p id = "f01">CSCI 4041 : KH 2-260</p>
                     </td>
                     <td>
-                        <h4>11:30 - 1:30 PM</h4>
-                        <a href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                        <h4 id = "f02">11:30 - 1:30 PM</h4>
+                        <a id = "f03" href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
                     </td>
                     <td>
                         -
                     </td>
                 </tr>	
             </table>
+        </div>
+        <div class = "imgdisp">
+            <div class = "img" >
+                <a target="_blank" href="images/error.png">
+                    <img id = "im0" src="images/error.png" alt="error">
+                </a>
+            </div>
+            <div class = "img">
+                <a target="_blank" href="images/error.png">
+                    <img id = "im1" src="images/error.png" alt="error">
+                </a>
+            </div>
+            <div class = "img">
+                <a target="_blank" href="images/error.png">
+                    <img id = "im2" src="images/error.png" alt="error">
+                </a>
+            </div>
+            <div class = "img">
+                <a target="_blank" href="images/error.png">
+                    <img id = "im3" src="images/error.png" alt="error">
+                </a>
+            </div>
         </div>
     </body>
 </html>

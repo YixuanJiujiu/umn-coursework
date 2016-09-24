@@ -1,6 +1,6 @@
 table 
 {
-	width: auto;
+	width: 800px;
 	border: 1px solid black;
 	margin-left: auto; 
 	margin-right: auto;
@@ -17,12 +17,15 @@ h1
 {
 	text-align: center;
     font-weight: bold;
+    border: none;
+    color: aliceblue;
 }
 
 h4
 {
     font-weight: bold;
     font-style: italic;
+    border: none;
 }
 
 caption 
@@ -30,28 +33,34 @@ caption
 	caption-side: bottom;
 	text-align: center;
     font-style: italic;
+    border: none;
+    color: aliceblue;
 }
 
 body 
 {
     background-color: darkslategray;
-
+    border: none;
 }
 
 div 
 {
     text-align: center;
+    border: none;
 }
 
 nav
 {
     background-color: antiquewhite;
     text-align: center;
+    border: none;
+    height: 30px;
 }
 
 span
 {
     font-weight: bold;
+    border: none;
 }
 
 form
@@ -61,6 +70,71 @@ form
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
+    border: none;
+}
+
+div.img
+{
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    float: left;
+    border: none;
+}
+
+div.img img
+{
+    width: 100%;
+    height: auto;
+    border: none;
+}
+
+.imgdisp
+{
+    width: 800px; 
+    height: auto;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    padding-top: 25px;
+}
+
+.anim
+{
+    width: 800px; 
+    height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin-left: auto; 
+    margin-right: auto;
+    border: none;
+}
+
+.anim span
+{
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 15s linear infinite;
+    border: none;
+    color: aliceblue;
+}
+
+@keyframes marquee
+{
+    0%      { transform: translate(0, 0); }
+    100%    { transform: translate(-100%, 0); }
+}
+
+a.button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    vertical-align: middle;
 }
 
 td:nth-child(1){background-color: mediumorchid}     /* Sets first column of table to unique color. */

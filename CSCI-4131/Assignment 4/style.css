@@ -1,0 +1,191 @@
+table 
+{
+	width: 800px;
+	border: 1px solid black;
+	margin-left: auto; 
+	margin-right: auto;
+}
+
+td 
+{ 
+	border: 1px solid black;
+	text-align: center;
+	padding: 15px;
+}
+
+h1 
+{
+	text-align: center;
+    font-weight: bold;
+    border: none;
+    color: aliceblue;
+}
+
+h4
+{
+    font-weight: bold;
+    font-style: italic;
+    border: none;
+}
+
+caption 
+{
+	caption-side: bottom;
+	text-align: center;
+    font-style: italic;
+    border: none;
+    color: aliceblue;
+}
+
+body 
+{
+    background-color: darkslategray;
+    border: none;
+}
+
+div 
+{
+    text-align: center;
+    border: none;
+}
+
+nav
+{
+    background-color: antiquewhite;
+    text-align: center;
+    border: none;
+    height: 30px;
+}
+
+span
+{
+    font-weight: bold;
+    border: none;
+}
+
+form
+{
+    background-color: #00ffaa;
+    text-align: left;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+}
+
+/* Below are classes being used to display images related
+    to the days events near the bottom of the calendar page. */
+div.img
+{
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    float: left;
+    border: none;
+}
+
+div.img img
+{
+    width: 100%;
+    height: auto;
+    border: none;
+}
+
+.imgdisp
+{
+    width: 800px; 
+    height: auto;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    padding-top: 25px;
+}
+
+/* Below are classes and  being used in calendar.html
+    to display text rolling from right to left marquee style. */
+.anim
+{
+    width: 800px; 
+    height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin-left: auto; 
+    margin-right: auto;
+    border: none;
+}
+
+.anim span
+{
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 15s linear infinite;
+    border: none;
+    color: aliceblue;
+}
+
+/* Below defines the movements of the marquee like element. */
+@keyframes marquee
+{
+    0%      { transform: translate(0, 0); }
+    100%    { transform: translate(-100%, 0); }
+}
+
+/* This is the class being used to style the navigation buttons
+    that allow the transition betwee the calendar & the form. */
+a.button 
+{
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    vertical-align: middle;
+}
+
+td:nth-child(1){background-color: mediumorchid}     /* Sets first column of table to unique color. */
+tr:nth-child(odd){background-color: #00ffaa}        /* Sets odd rows of table to unique color. */
+tr:nth-child(even){background-color: lightskyblue}  /* Sets even rows of table to unique color. */
+
+/* This is the class being used to configure the appearance of the 
+    advertisements banner at the top of the form page. */
+.banner
+{
+    width: 800px;
+    height: 295px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    border: none;
+}
+
+/* These are the classes that style the banner on the top of the form page.
+    These classes also enable a hover tool tip when hovering over the image. */
+.banner .tooltiptext 
+{
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    border: none;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    right: 90%;
+    margin-top: 10px;
+}
+
+/* This class enables the tool tip text when focus is over the banner 
+    on the form page. */
+.banner:hover .tooltiptext 
+{
+    visibility: visible;
+    border: none;
+}

@@ -149,43 +149,20 @@ td:nth-child(1){background-color: mediumorchid}     /* Sets first column of tabl
 tr:nth-child(odd){background-color: #00ffaa}        /* Sets odd rows of table to unique color. */
 tr:nth-child(even){background-color: lightskyblue}  /* Sets even rows of table to unique color. */
 
-/* This is the class being used to configure the appearance of the 
-    advertisements banner at the top of the form page. */
-.banner
+/* This puts the main advertisement image in the horizontal middle 
+    of the web browser page. */
+#adImage
 {
-    width: 800px;
-    height: 295px;
+    position: relative;
     margin-left: auto;
     margin-right: auto;
-    position: relative;
-    border: none;
 }
 
-/* These are the classes that style the banner on the top of the form page.
-    These classes also enable a hover tool tip when hovering over the image. */
-.banner .tooltiptext 
+/* This is the class supposed to help vertically align the previous
+    and next advertisement buttons. It isn't helping very much right now :/ */
+.helper 
 {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    border: none;
-    
-    /* Position the tooltip */
-    position: absolute;
-    z-index: 1;
-    top: 100%;
-    right: 90%;
-    margin-top: 10px;
-}
-
-/* This class enables the tool tip text when focus is over the banner 
-    on the form page. */
-.banner:hover .tooltiptext 
-{
-    visibility: visible;
-    border: none;
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
 }

@@ -1,0 +1,110 @@
+table 
+{
+	width: 800px;
+	border: 1px solid black;
+	margin-left: auto; 
+	margin-right: auto;
+}
+
+td 
+{ 
+	border: 1px solid black;
+	text-align: center;
+	padding: 15px;
+}
+
+h1 
+{
+	text-align: center;
+    font-weight: bold;
+    border: none;
+    color: aliceblue;
+}
+
+h4
+{
+    font-weight: bold;
+    font-style: italic;
+    border: none;
+}
+
+body 
+{
+    background-color: darkslategray;
+    border: none;
+}
+
+div 
+{
+    text-align: center;
+    border: none;
+}
+
+nav
+{
+    background-color: antiquewhite;
+    text-align: center;
+    border: none;
+    height: 30px;
+}
+
+span
+{
+    font-weight: bold;
+    border: none;
+}
+
+form
+{
+    background-color: #00ffaa;
+    text-align: left;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+}
+
+/* This puts the main advertisement image in the horizontal middle 
+    of the web browser page. */
+#adImage
+{
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+}
+
+/* This is the class supposed to help vertically align the previous
+    and next advertisement buttons. It isn't helping very much right now :/ */
+.helper 
+{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    border: none;
+}
+
+#map
+{
+    width: 80%;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    margin-top: 25px;
+}
+
+.locationHelper
+{
+    display: inline;
+}
+
+.lasxLocation
+{
+    display: inline;
+}
+
+.khLocation
+{
+    display: inline;
+}

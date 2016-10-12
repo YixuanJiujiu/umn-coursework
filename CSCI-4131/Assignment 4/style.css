@@ -133,8 +133,8 @@ div.img img
 }
 
 /* This is the class being used to style the navigation buttons
-    that allow the transition betwee the calendar & the form. */
-a.button 
+    that allow the transition between the calendar & the form. */
+button 
 {
     -webkit-appearance: button;
     -moz-appearance: button;
@@ -143,6 +143,7 @@ a.button
     background-color: black;
     color: white;
     vertical-align: middle;
+    border: none;
 }
 
 td:nth-child(1){background-color: mediumorchid}     /* Sets first column of table to unique color. */
@@ -156,6 +157,7 @@ tr:nth-child(even){background-color: lightskyblue}  /* Sets even rows of table t
     position: relative;
     margin-left: auto;
     margin-right: auto;
+    border: none;
 }
 
 /* This is the class supposed to help vertically align the previous
@@ -165,4 +167,5 @@ tr:nth-child(even){background-color: lightskyblue}  /* Sets even rows of table t
     display: inline-block;
     height: 100%;
     vertical-align: middle;
+    border: none;
 }

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset = "utf-8">
+        <title>Fall 2016 Schedule</title>
+        <link rel = "stylesheet" type = "text/css" href = "style.css">
+        <script defer src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAZmG5HzKfNp-9Wq51UUkk2jXFkeC5sJ54&callback=initMap"></script>
+        <script src = "calendar.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <h1>My Calendar</h1>
+        <div>
+            <nav>
+                <a href="form.html" class="button">Form Input</a>
+            </nav>
+        </div>
+        <div>
+            <table >
+                <tr>
+                    <td>
+                        <span>MON</span>
+                    </td>
+                    <td>
+                        <h4>8:30 - 10:30 AM</h4>
+                        <p class = "locationHelper"> WORK - <p class = "lasxLocation">LASX INDUSTRIES</p></p>
+                    </td>
+                    <td>
+                        <h4>11:15 - 12:30 PM</h4>
+                        <p class = "locationHelper">CSCI 5801 : <p class = "khLocation">KH 3-230</p></p>
+                    </td>
+                    <td>
+                        <h4>4:00 - 5:15 PM</h4>
+                        <p class = "locationHelper">CSCI 5103 : <p class = "khLocation">KH 3-115</p></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>TUE</span>
+                    </td>
+                    <td>
+                        <h4 id = "tu00">11:15 - 12:30 PM</h4>
+                        <p id = "tu01">CSCI 4041 : KH 3-210</p>
+                    </td>
+                    <td>
+                        <h4 id = "tu02">2:30 - 3:45 PM</h4>
+                        <p id = "tu03">CSCI 4131 : BH 230</p>
+                    </td>
+                    <td>
+                        <h4 id = "tu04">4:30 - 6:30 PM</h4>
+                        <a id = "tu05" href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>WED</span>
+                    </td>
+                    <td>
+                        <h4>8:30 - 10:30 AM</h4>
+                        <a href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                    </td>
+                    <td>
+                        <h4>11:15 - 12:30 PM</h4>
+                        CSCI 5801 : KH 3-230
+                    </td>
+                    <td>
+                        <h4>4:00 - 5:15 PM</h4>
+                        CSCI 5103 : KH 3-115
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>THU</span>
+                    </td>
+                    <td>
+                        <h4>11:15 - 12:30 PM</h4>
+                        CSCI 4041 : KH 3-210
+                    </td>
+                    <td>
+                        <h4>2:30 - 3:45 PM</h4>
+                        CSCI 4131 : BH 230
+                    </td>
+                    <td>
+                        <h4>4:30 - 6:30 PM</h4>
+                        <a href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                    </td>
+                <tr>
+                    <td>
+                        <span>FRI</span>
+                    </td>
+                    <td>
+                        <h4 id = "f00">10:10 - 11:00 AM</h4>.
+                        <p id = "f01">CSCI 4041 : KH 2-260</p>
+                    </td>
+                    <td>
+                        <h4 id = "f02">11:30 - 1:30 PM</h4>
+                        <a id = "f03" href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                    </td>
+                    <td>
+                        -
+                    </td>
+                </tr>	
+            </table>
+        </div>
+        <div>
+            <form>
+                <p>
+                    <input type = "text" id = location>
+                    <input type = "button" id = submit value = "Submit">
+                </p>
+                <p>
+                    <input type = "number" id = "search-radius">
+                    <input type = "button" id = "find" value = "Find Nearby Restraunts">
+                </p>
+            </form>
+        </div>
+        <div id = "map"></div>
+    </body>
+</html>
+    

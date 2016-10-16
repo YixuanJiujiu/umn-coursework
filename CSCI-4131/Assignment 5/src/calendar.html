@@ -5,8 +5,12 @@
         <meta charset = "utf-8">
         <title>Fall 2016 Schedule</title>
         <link rel = "stylesheet" type = "text/css" href = "style.css">
-        <script defer src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAZmG5HzKfNp-9Wq51UUkk2jXFkeC5sJ54&callback=initMap"></script>
-        <script src = "calendar.js" type="text/javascript"></script>
+        <script type = "text/javascript" 
+            src = "calendar.js">
+        </script>
+        <script async
+            src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAZmG5HzKfNp-9Wq51UUkk2jXFkeC5sJ54&libraries=places&callback=initMap">
+        </script>
     </head>
     <body>
         <h1>My Calendar</h1>
@@ -105,12 +109,12 @@
         <div>
             <form>
                 <p>
-                    <input type = "text" id = location>
-                    <input type = "button" id = submit value = "Submit">
+                    <input id = "address" type = "textbox" >
+                    <input id = "submit" type = "button"  value = "Submit">
                 </p>
                 <p>
-                    <input type = "number" id = "search-radius">
-                    <input type = "button" id = "find" value = "Find Nearby Restraunts">
+                    <input id = "search-radius" type = "number">
+                    <input id = "find" type = "button" value = "Find Nearby Restraunts">
                 </p>
             </form>
         </div>

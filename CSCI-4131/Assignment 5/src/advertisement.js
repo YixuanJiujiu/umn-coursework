@@ -1,7 +1,7 @@
 // Advertisement images.
-firstAd = "advertisement-images/Nerve.jpg";
-secondAd = "advertisement-images/secret-life-of-pets.jpg";
-thirdAd = "advertisement-images/suicide-squad.jpg";
+firstAd = "../advertisement-images/Nerve.jpg";
+secondAd = "../advertisement-images/secret-life-of-pets.jpg";
+thirdAd = "../advertisement-images/suicide-squad.jpg";
 
 // Advertisement image tooltips.
 firstAdTooltip = "Nerve Fri, Sep 30 7:00PM";
@@ -9,13 +9,13 @@ secondAdTooltip = "secret-life-of-pets Fri, Oct 7 7:00PM";
 thirdAdTooltip = "suicide-squade Fri, Oct 14 8:00PM";
 
 // Control images.
-activeBullet = "advertisement-images/bullet_blue.png";
-nonactiveBullet = "advertisement-images/bullet_gray.png";
-hoverBullet = "advertisement-images/bullet_orange.png";
-next = "advertisement-images/next_blue.png";
-prev = "advertisement-images/prev_blue.png";
-hoverNext = "advertisement-images/next_orange.png";
-hoverPrev = "advertisement-images/prev_orange.png";
+activeBullet = "../advertisement-images/bullet_blue.png";
+nonactiveBullet = "../advertisement-images/bullet_gray.png";
+hoverBullet = "../advertisement-images/bullet_orange.png";
+next = "../advertisement-images/next_blue.png";
+prev = "../advertisement-images/prev_blue.png";
+hoverNext = "../advertisement-images/next_orange.png";
+hoverPrev = "../advertisement-images/prev_orange.png";
 
 var currentBulletId;    // Holds the element id of the currently selected (active) bullet.
 var count;              // Seconds that have elapsed since the page was loaded.

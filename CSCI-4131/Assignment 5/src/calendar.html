@@ -27,7 +27,7 @@
                     </td>
                     <td>
                         <h4>8:30 - 10:30 AM</h4>
-                        <p class = "locationHelper"> WORK - <p class = "lasxLocation">LASX INDUSTRIES</p></p>
+                        <p class = "locationHelper"> WORK - <p class = "lasxLocation">LASX</p></p>
                     </td>
                     <td>
                         <h4>11:15 - 12:30 PM</h4>
@@ -43,16 +43,16 @@
                         <span>TUE</span>
                     </td>
                     <td>
-                        <h4 id = "tu00">11:15 - 12:30 PM</h4>
-                        <p id = "tu01">CSCI 4041 : KH 3-210</p>
+                        <h4>11:15 - 12:30 PM</h4>
+                        <p class = "locationHelper">CSCI 4041 : <p class = "khLocation">KH 3-210</p></p>
                     </td>
                     <td>
-                        <h4 id = "tu02">2:30 - 3:45 PM</h4>
-                        <p id = "tu03">CSCI 4131 : BH 230</p>
+                        <h4>2:30 - 3:45 PM</h4>
+                        <p class = "locationHelper">CSCI 4131 : <p class = "bhLocation">BH 230</p></p>
                     </td>
                     <td>
-                        <h4 id = "tu04">4:30 - 6:30 PM</h4>
-                        <a id = "tu05" href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                        <h4>4:30 - 6:30 PM</h4>
+                        <p class = "locationHelper"> WORK - <p class = "lasxLocation">LASX</p></p>
                     </td>
                 </tr>
                 <tr>
@@ -61,15 +61,15 @@
                     </td>
                     <td>
                         <h4>8:30 - 10:30 AM</h4>
-                        <a href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                        <p class = "locationHelper"> WORK - <p class = "lasxLocation">LASX</p></p>
                     </td>
                     <td>
                         <h4>11:15 - 12:30 PM</h4>
-                        CSCI 5801 : KH 3-230
+                        <p class = "locationHelper"> CSCI 5801 : <p class = "khLocation">KH 3-230</p></p>
                     </td>
                     <td>
                         <h4>4:00 - 5:15 PM</h4>
-                        CSCI 5103 : KH 3-115
+                        <p class = "locationHelper"> CSCI 5103 : <p class = "khLocation">KH 3-115</p></p>
                     </td>
                 </tr>
                 <tr>
@@ -78,35 +78,36 @@
                     </td>
                     <td>
                         <h4>11:15 - 12:30 PM</h4>
-                        CSCI 4041 : KH 3-210
+                        <p class = "locationHelper"> CSCI 4041 : <p class = "khLocation">KH 3-210</p></p>
                     </td>
                     <td>
                         <h4>2:30 - 3:45 PM</h4>
-                        CSCI 4131 : BH 230
+                        <p class = "locationHelper"> CSCI 4131 : <p class = "bhLocation">BH 230</p></p>
                     </td>
                     <td>
                         <h4>4:30 - 6:30 PM</h4>
-                        <a href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                        <p class = "locationHelper"> WORK - <p class = "lasxLocation">LASX</p></p>
                     </td>
                 <tr>
                     <td>
                         <span>FRI</span>
                     </td>
                     <td>
-                        <h4 id = "f00">10:10 - 11:00 AM</h4>.
-                        <p id = "f01">CSCI 4041 : KH 2-260</p>
+                        <h4>10:10 - 11:00 AM</h4>
+                        <p class = "locationHelper"> CSCI 4041 : <p class = "khLocation">KH 2-260</p></p>
                     </td>
                     <td>
-                        <h4 id = "f02">11:30 - 1:30 PM</h4>
-                        <a id = "f03" href="http://www.lasx.com">WORK - LASX INDUSTRIES</a>
+                        <h4>11:30 - 1:30 PM</h4>
+                        <p class = "locationHelper"> WORK - <p class = "lasxLocation">LASX</p></p>
                     </td>
                     <td>
-                        -
+                        <h4>11:45 pm</h4>
+                        <p class = "locationHelper"> Party : <p class = "raftersLocation">Rafters</p></p>
                     </td>
                 </tr>	
             </table>
         </div>
-        <div>
+        <div id = "formContainer">
             <form>
                 <p>
                     <input id = "address" type = "textbox" >
@@ -115,6 +116,7 @@
                 <p>
                     <input id = "search-radius" type = "number">
                     <input id = "find" type = "button" value = "Find Nearby Restraunts">
+                    <p id = "searchRangeText">(Enter radius between 500 and 50,000 meters)</p>
                 </p>
             </form>
         </div>

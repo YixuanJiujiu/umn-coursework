@@ -4,6 +4,8 @@ table
 	border: 1px solid black;
 	margin-left: auto; 
 	margin-right: auto;
+    table-layout: fixed;
+    background-color: #00ffaa;
 }
 
 td 
@@ -97,6 +99,7 @@ form
 .locationHelper
 {
     display: inline;
+    border: none;
 }
 
 .lasxLocation
@@ -107,4 +110,31 @@ form
 .khLocation
 {
     display: inline;
+}
+
+.bhLocation
+{
+    display: inline;
+}
+
+.raftersLocation
+{
+    display: inline;
+}
+
+#tempImage
+{
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+#formContainer
+{
+    padding-top: 25px;
+}
+
+#searchRangeText
+{
+    text-align: center;
 }

@@ -15,8 +15,6 @@
 #include <errno.h>	// for printing errors (errno)
 #include <stdlib.h>	// for exit
 
-#define DEBUG
-
 static const char black_fn[] = "producer_black.txt";
 static const char white_fn[] = "producer_white.txt";
 static const char red_fn[] = "producer_red.txt";
@@ -30,7 +28,6 @@ char buffer[2][MAX_ITEM_SIZE];
 pthread_mutex_t lock;
 pthread_cond_t space_available, item_available;
 int buf_count = 0;
-int finished_producers = 0;
 
 void *producer_black(void *arg)
 {
@@ -46,14 +43,12 @@ void *producer_black(void *arg)
 		gettimeofday(&timestamp, NULL);
 		snprintf(item_str, MAX_ITEM_SIZE, "%s %li", black, timestamp.tv_usec);
 		strcpy(buffer[buf_count], item_str);		
-		//printf("Buffer after add: %s\n", buffer[buf_count]);
 		buf_count++;
 		
 		pthread_mutex_unlock(&lock);
 		pthread_cond_signal(&item_available);
 		fprintf(log, "%s\n", item_str);
 	}
-	finished_producers++;
 }
 
 void *producer_white(void *arg)
@@ -70,14 +65,12 @@ void *producer_white(void *arg)
 		gettimeofday(&timestamp, NULL);
 		snprintf(item_str, MAX_ITEM_SIZE, "%s %li", white, timestamp.tv_usec);
 		strcpy(buffer[buf_count], item_str);		
-		//printf("Buffer after add: %s\n", buffer[buf_count]);
 		buf_count++;
 		
 		pthread_mutex_unlock(&lock);
 		pthread_cond_signal(&item_available);
 		fprintf(log, "%s\n", item_str);
 	}
-	finished_producers++;
 }
 
 void *producer_red(void *arg)
@@ -101,31 +94,28 @@ void *producer_red(void *arg)
 		pthread_cond_signal(&item_available);
 		fprintf(log, "%s\n", item_str);
 	}
-	finished_producers++;
 }
 
 void *consumer(void *arg)
 {
 	FILE* log = (FILE*)arg;
-
+	int items_removed = 0;
 	do
 	{
 		pthread_mutex_lock(&lock);
 		while (buf_count == 0)
 			while (pthread_cond_wait(&item_available, &lock) != 0);
 
-		//printf("Buffer before remove: %s\n", buffer[buf_count - 1]);
 		char item_str[MAX_ITEM_SIZE];
 		strcpy(item_str, buffer[buf_count - 1]);
 		*buffer[buf_count - 1] = NULL;
-		//printf("Removed: %s\n", item_str);
 		buf_count--;
-		//printf("Buffer after remove: %s\n", buffer[buf_count - 1]);
+		items_removed++;
 
 		pthread_mutex_unlock(&lock);
 		pthread_cond_signal(&space_available);
 		fprintf(log, "%s\n", item_str);
-	} while (finished_producers < 3);
+	} while (items_removed < 3000);
 }
 
 int main(int argc, char *argv[])
@@ -135,20 +125,25 @@ int main(int argc, char *argv[])
 	if ((black_fp = fopen(black_fn, "a")) == NULL)
 	{
 		fprintf(stderr, "error opening %s: %s\n", black_fn, strerror(errno));
+		exit(1);
 	}
+
 	if ((white_fp = fopen(white_fn, "a")) == NULL)
 	{
 		fprintf(stderr, "error opening %s: %s\n", white_fn, strerror(errno));
+		exit(1);
 	}
 	
 	if ((red_fp = fopen(red_fn, "a")) == NULL)
 	{
-		fprintf(stderr, "error opening %s: %s\n", red_fn, strerror(errno));
+		fprintf(stderr, "error opening %s: %s\n", red_fn, strerror(errno));	
+		exit(1);
 	}
 	
 	if ((consumer_fp = fopen(consumer_fn, "a")) == NULL)
 	{
 		fprintf(stderr, "error opening %s: %s\n", consumer_fn, strerror(errno));
+		exit(1);
 	}
 
 	// create posix locks & threads
@@ -160,25 +155,25 @@ int main(int argc, char *argv[])
 	pthread_cond_init(&item_available, NULL);
 	int pthread_error_num = 0;
 
-	if ((pthread_error_num = pthread_create(&black_producer_thr, NULL, producer_black, (void*)black_fp)))
+	if ((pthread_error_num = pthread_create(&black_producer_thr, NULL, producer_black, (void *) black_fp)))
 	{
 		fprintf(stderr, "error creating black thread: %s\n", strerror(pthread_error_num));
 		exit(1);
 	}
 
-	if ((pthread_error_num = pthread_create(&white_producer_thr, NULL, producer_white, (void*)white_fp)))
+	if ((pthread_error_num = pthread_create(&white_producer_thr, NULL, producer_white, (void *) white_fp)))
 	{
 		fprintf(stderr, "error creating black thread: %s\n", strerror(pthread_error_num));
 		exit(1);
 	}
 
-	if ((pthread_error_num = pthread_create(&red_producer_thr, NULL, producer_red, (void*)red_fp)))
+	if ((pthread_error_num = pthread_create(&red_producer_thr, NULL, producer_red, (void *) red_fp)))
 	{
 		fprintf(stderr, "error creating black thread: %s\n", strerror(pthread_error_num));
 		exit(1);
 	}
 
-	if ((pthread_error_num = pthread_create(&consumer_thr, NULL, consumer, (void*)consumer_fp)))
+	if ((pthread_error_num = pthread_create(&consumer_thr, NULL, consumer, (void *) consumer_fp)))
 	{
 		fprintf(stderr, "error creating black thread: %s\n", strerror(pthread_error_num));
 		exit(1);
@@ -195,23 +190,24 @@ int main(int argc, char *argv[])
 	if (fclose(black_fp) != 0)
 	{
 		fprintf(stderr, "error closing %s: %s\n", black_fn, strerror(errno));
+		exit(1);
 	}
 	if (fclose(white_fp) != 0)
 	{
 		fprintf(stderr, "error closing %s: %s\n", white_fn, strerror(errno));
+		exit(1);
 	}
 	if (fclose(red_fp) != 0)
 	{
 		fprintf(stderr, "error closing %s: %s\n", red_fn, strerror(errno));
+		exit(1);
 	}
 	if (fclose(consumer_fp) != 0)
 	{
 		fprintf(stderr, "error closing %s: %s\n", consumer_fn, strerror(errno));
+		exit(1);
 	}
 
-	#ifdef DEBUG
-	printf(":)\n");
-	#endif
 	return 0;
 }
 

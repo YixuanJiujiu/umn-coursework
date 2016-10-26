@@ -11,13 +11,13 @@
 
 static const char consumer_fn[] = "consumer.txt";
 
+// See comments for this structure in main.c
 typedef struct buffer
 {
         char item_buffer[2][MAX_ITEM_SIZE];
         pthread_mutex_t lock;
         pthread_cond_t space_available, item_available;
         int buf_count;
-        int finished_producers;
 } shm_buffer;
 
 int main (int argc, char* argv[])
@@ -46,25 +46,26 @@ int main (int argc, char* argv[])
 		exit(1);
 	}		
 
+	// consume items from buffer until total consumed items is 3000
+	int items_removed = 0;
 	do
         {
                 pthread_mutex_lock(&(shmptr->lock));
                 while (shmptr->buf_count == 0)
                         while (pthread_cond_wait(&(shmptr->item_available), &(shmptr->lock)) != 0);
 
-                //printf("Buffer before remove: %s\n", buffer[buf_count - 1]);
                 char item_str[MAX_ITEM_SIZE];
                 strcpy(item_str, shmptr->item_buffer[shmptr->buf_count - 1]);
                 *(shmptr->item_buffer[shmptr->buf_count - 1]) = NULL;
-                //printf("Removed: %s\n", item_str);
                 shmptr->buf_count--;
-                //printf("Buffer after remove: %s\n", buffer[buf_count - 1]);
+		items_removed++;
 
                 pthread_mutex_unlock(&(shmptr->lock));
                 pthread_cond_signal(&(shmptr->space_available));
                 fprintf(consumer_fp, "%s\n", item_str);
-        } while (shmptr->finished_producers < 3);
+        } while (items_removed < 3000);
 
+	// close log file
 	if (fclose(consumer_fp) != 0)
 	{
 		fprintf(stderr, "error closing %s: %s\n", consumer_fn, strerror(errno));
@@ -72,6 +73,7 @@ int main (int argc, char* argv[])
 		exit(1);
 	}
 
+	// detach from shared memory & return
 	shmdt((void *) shmptr);
 	return 0;
 }

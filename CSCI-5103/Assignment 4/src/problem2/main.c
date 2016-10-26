@@ -17,37 +17,29 @@
 #include <sys/wait.h>	// for wait
 #include <pthread.h>	// for condition variables & mutex
 
-#define DEBUG
-#define PRODUCER "producer"
-#define CONSUMER "consumer"
-#define SEM_NAME "lock"
-#define MAX_ITEM_SIZE (sizeof(black) + (2 * sizeof(char)) + sizeof(long int)) 
-
 // colors & arguments for passing to producer/consumer
 static const char black[] = "BLACK";
 static const char white[] = "WHITE";
 static const char red[] = "RED";
 static const char shmkey[] = "4455";
+#define MAX_ITEM_SIZE (sizeof(black) + (2 * sizeof(char)) + sizeof(long int)) 
 
+// buffer structure to be placed in shared memory
 typedef struct buffer
 {
-	char item_buffer[2][MAX_ITEM_SIZE];
-	pthread_mutex_t lock;
-	pthread_cond_t space_available, item_available;
-	int buf_count;
-	int finished_producers;	
+	char item_buffer[2][MAX_ITEM_SIZE];			// fixed, 2 item buffer
+	pthread_mutex_t lock;					// mutex providing synchronized access to buffer
+	pthread_cond_t space_available, item_available;		// conditonal variables used to signal producer & consumer from 1 another
+	int buf_count;						// count of items presently in buffer
 } shm_buffer;
 
 int main(int argc, char *argv[])
 {
-
-
 	// create shared memory
 	key_t key = 4455;	// arbitrary integer
-	int shmflg = 1023;	// all permissions & modes set
+	int shmflg = 1023;	// when this flag is used, all permissions & modes will be set
 	int shmid;		// shared memory identifier
-	shm_buffer *shmptr;		// pointer to shared memory segment
-	//int size = 2 * (MAX_ITEM_SIZE + sizeof(int));
+	shm_buffer *shmptr;	// pointer to shared memory segment
 	
 	if ((shmid = shmget(key, sizeof(shm_buffer), shmflg)) == -1)
 	{
@@ -60,6 +52,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	// initialize buffer mutex & conditon variables in shared memory
 	pthread_mutexattr_t mutex_attr;
 	pthread_condattr_t cond_attr;
 	pthread_mutexattr_init(&mutex_attr);
@@ -72,14 +65,13 @@ int main(int argc, char *argv[])
 	pthread_mutexattr_destroy(&mutex_attr);
 	pthread_condattr_destroy(&cond_attr);
 
-	// fork processes
+	// fork child processes
 	pid_t producer0_pid, producer1_pid, producer2_pid, consumer_pid;
 	int exec_result = 0;
 	
 	// fork black producer process
 	if ((producer0_pid = fork()) == 0)
 	{
-		//printf("producer black child!!!\n");
 		if ((exec_result = execl("./producer", "producer", black, shmkey, NULL)) < 0)
 		{
 			fprintf(stderr, "black producer execl failed: %s\n", strerror(errno));
@@ -96,7 +88,6 @@ int main(int argc, char *argv[])
 		// fork consumer process 
 		if ((consumer_pid = fork()) == 0)
 		{
-			//printf("consumer child!!!\n");
 			if ((exec_result = execl("./consumer", "consumer", shmkey, NULL)) < 0)
 			{
 				fprintf(stderr, "consumer execl failed: %s\n", strerror(errno));
@@ -113,7 +104,6 @@ int main(int argc, char *argv[])
 			// fork white producer process
 			if ((producer1_pid = fork()) == 0)
 			{
-				//printf("producer white child!!!\n");
 				if ((exec_result = execl("./producer", "producer", white, shmkey, NULL)) < 0)
 				{
 					fprintf(stderr, "white producer execl failed: %s\n", strerror(errno));
@@ -131,7 +121,6 @@ int main(int argc, char *argv[])
 				// fork red producer process
 				if ((producer2_pid = fork()) == 0)
 				{
-					//printf("producer red child!!!\n");
 					if ((exec_result = execl("./producer", "producer", red, shmkey, NULL)) < 0)
 					{
 						fprintf(stderr, "red producer execl failed: %s\n", strerror(errno));
@@ -144,21 +133,23 @@ int main(int argc, char *argv[])
 					exit(1);
 				}
 			}
-			
-			printf("Forking finished!!!\n");
 		}
 	}
+
+	// wait for all child processes to finish
 	pid_t wait_pid;
 	int status = 0;
-	while ((wait_pid = wait(&status)) > 0) { /* wait for all child processes to finish */ }
+	while ((wait_pid = wait(&status)) > 0) { /* waiting... */ }
 
+	// destroy mutex & condition variables in shared memory
 	pthread_mutex_destroy(&(shmptr->lock));
 	pthread_cond_destroy(&(shmptr->space_available));
 	pthread_cond_destroy(&(shmptr->item_available));
+
+	// detach & remove shared memory
 	shmdt((void *) shmptr);
 	shmctl(shmid, IPC_RMID, NULL);	
-	printf("parent finished executing\n");
 	
-return 0;
+	return 0;
 }
 

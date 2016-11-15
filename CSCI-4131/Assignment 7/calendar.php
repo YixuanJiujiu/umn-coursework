@@ -188,7 +188,7 @@
 		}
         </script>
         <script async
-            src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAZmG5HzKfNp-9Wq51UUkk2jXFkeC5sJ54&libraries=places&callback=initMap">
+            src = "https://maps.googleapis.com/maps/api/js?key=<YOUR_KEY_HERE>&libraries=places&callback=initMap">
         </script>
     </body>
 </html>

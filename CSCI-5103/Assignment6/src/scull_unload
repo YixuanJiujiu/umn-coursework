@@ -1,14 +1,11 @@
+#file name scull_unload
 #!/bin/sh
-module="scullbuffer"
+module="buffer"
 device="scullbuffer"
 
 # invoke rmmod with all arguments we got
-/sbin/rmmod $module $* || exit 1
+sudo rmmod ${module}
 
 # Remove stale nodes
-rm -f /dev/${device} /dev/${device}
-rm -f /dev/${device}priv
-rm -f /dev/${device}single
-rm -f /dev/${device}uid
-rm -f /dev/${device}wuid
+rm -f /dev/${device} 
 

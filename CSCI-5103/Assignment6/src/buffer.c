@@ -11,7 +11,20 @@
 #include <linux/semaphore.h>	// for init_MUTEX
 //#include "scull.h"		// local definitions
 
-#define init_MUTEX(_m) sema_init(_m, 1);
+#define init_MUTEX(_m) sema_init(_m, 1)
+#define DEVICE_NAME "buffer"
+int MAJOR_NUM = 0;
+int MINOR_NUM = 0;
+#define DEVICE_COUNT 1
+#define NITEMS 20
+
+MODULE_AUTHOR("Maxwell Pung");
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("A character device driver that handles the bounded buffer problem.");
+MODULE_SUPPORTED_DEVICE(DEVICE_NAME);
+
+static struct scull_buffer *scullb_device;	// pointer to device
+dev_t scullb_devno;				// first device # in list
 
 struct scull_buffer
 {
@@ -24,45 +37,22 @@ struct scull_buffer
         struct cdev cdev;                  	/* Char device structure */
 };
 
-// parameters
-static int device_count = 1;	// number of scull_buffer devices
-static int nitems = 20;		// default value for size of buffer
-static int item_size = 32;	// 32B
-int major = 0;
-int minor;
-
-module_param(device_count, int, S_IRUGO);
-module_param(nitems, int, S_IRUGO);
-module_param(item_size, int, S_IRUGO);
-module_param(major, int, S_IRUGO);
-module_param(minor, int, S_IRUGO);
-
-// create device number structure
-// create pointer to devices
-dev_t scullb_devno;				// first device # in list
-static int spacefree(struct scull_buffer *dev);	// TODO: ?
-
-MODULE_AUTHOR("Maxwell Pung");
-MODULE_LICENSE("GPL");
-
-// open	
-// where inode is a pointer to...
-// where filp is a pointer to a struct file
+/*
+	Description: This function is called when a process attempts to open the device file.
+*/
 static int scullb_open(struct inode *inode, struct file *filp)
 {
 	struct scull_buffer *dev;
-
 	dev = container_of(inode->i_cdev, struct scull_buffer, cdev);	// find appropriate device structure
 	filp->private_data = dev;	// for easy access to scull_buffer struct in future
 
-	if (down_interruptible(&dev->sem))
+	if (down_interruptible(&dev->sem))	
 	{
 		return -ERESTARTSYS;
 	}
-	// TODO the block below should be moved to the init function
 	if (dev->buffer == NULL)	// then the buffer hasn't been created, so create it.
 	{
-		dev->buffer = kmalloc(nitems, GFP_KERNEL);	// TODO: verify size is correct
+		dev->buffer = kmalloc(NITEMS, GFP_KERNEL);	// TODO: verify size is correct
                 if (dev->buffer == NULL)	// then memory was unsuccessfully allocated.
 		{
                         up(&dev->sem);
@@ -71,7 +61,9 @@ static int scullb_open(struct inode *inode, struct file *filp)
 		printk(KERN_ALERT "Buffer has been allocated %zu bytes.\n", ksize(dev->buffer));
 	}
 
-	// assign sh to other scull_buffer members
+	scullb_device->buffer_size = NITEMS;
+	scullb_device->buffer_end = scullb_device->buffer + scullb_device->buffer_size;
+	scullb_device->rp = scullb_device->wp = scullb_device->buffer;
 
  	// determine if calling process is consumer or producer & add it to respective counter
 	if (filp->f_mode & FMODE_READ)
@@ -89,12 +81,12 @@ static int scullb_open(struct inode *inode, struct file *filp)
         return nonseekable_open(inode, filp);	// seeking is not necessary
 }
 
-// release
-// I believet this function should combine scull_p_release & scull_p_cleanup.
+/*
+	Definition: Called when process closes a device file.
+*/
 static int scullb_release(struct inode *inode, struct file *filp)
 {
 	struct scull_buffer *dev = filp->private_data;
-
         down(&dev->sem);
         if (filp->f_mode & FMODE_READ)		// then a consumer has finished consuming
 	{	
@@ -171,29 +163,27 @@ static void scullb_setup_cdev(struct scull_buffer *dev/*, int index*/)
 	}
 }
 
-static struct scull_buffer *scullb_device;	// pointer to device
-
 int scullb_init(void)
 {
 	int result = -1;
 	dev_t dev = 0;
 /*
- * Get a range of minor numbers to work with, asking for a dynamic
- * major unless directed otherwise at load time.
+ * Get a range of MINOR numbers to work with, asking for a dynamic
+ * MAJOR unless directed otherwise at load time.
  */
-	if (major) 
+	if (MAJOR_NUM) 
 	{
-		dev = MKDEV(major, minor);
-		result = register_chrdev_region(dev, device_count, "scullbuffer");
+		dev = MKDEV(MAJOR_NUM, MINOR_NUM);
+		result = register_chrdev_region(dev, DEVICE_COUNT, DEVICE_NAME);
 	} 
-	else 
+	else // TODO remove if leaving major hardcoded
 	{
-		result = alloc_chrdev_region(&dev, minor, device_count, "scullbuffer");
-		major = MAJOR(dev);
-		}
+		result = alloc_chrdev_region(&dev, MINOR_NUM, DEVICE_COUNT, DEVICE_NAME);
+		MAJOR_NUM = MAJOR(dev);
+	}
 	if (result < 0) 
 	{
-		printk(KERN_WARNING "scullbuffer: can't get major %d\n", major);
+		printk(KERN_INFO "scullbuffer: can't get MAJOR %d\n", MAJOR_NUM);
 		// TODO release call necessarry?
 		return result;
 	}
@@ -202,28 +192,39 @@ int scullb_init(void)
 	 * can be specified at load time
 	 */
 	scullb_devno = dev;
-	scullb_device = kmalloc(device_count * sizeof(struct scull_buffer), GFP_KERNEL);
+	scullb_device = kmalloc(DEVICE_COUNT * sizeof(struct scull_buffer), GFP_KERNEL);
 	if (scullb_device == NULL) 
 	{
-		unregister_chrdev_region(dev, device_count);
+		unregister_chrdev_region(dev, DEVICE_COUNT);
 		// TODO release call necessary?
 		return -ENOMEM;
 	}
-	memset(scullb_device, 0, device_count * sizeof(struct scull_buffer));
+	memset(scullb_device, 0, DEVICE_COUNT * sizeof(struct scull_buffer));
 
         // Initialize each device.
 	init_waitqueue_head(&scullb_device->producer_queue);
 	init_waitqueue_head(&scullb_device->consumer_queue);
 	scullb_device->num_producers = scullb_device->num_consumers = 0;
-	scullb_device->buffer_size = nitems;
-	scullb_device->buffer_end = scullb_device->buffer + scullb_device->buffer_size;
-	scullb_device->rp = scullb_device->wp = scullb_device->buffer;
 	init_MUTEX(&scullb_device->sem);
 	scullb_setup_cdev(scullb_device);
-
-	dev = MKDEV(major, minor + device_count);	// TODO necessary?
+	printk(KERN_INFO "scullbuffer: Hola (Module loaded).\n");
 	return 0; /* succeed */
 }
 
+void scullb_cleanup(void)
+{
+	/*if (scullb_device == NULL)
+	{*/
+		cdev_del(&scullb_device->cdev);
+	/*}*/
+	kfree(scullb_device->buffer);
+	kfree(scullb_device);
+	unregister_chrdev_region(scullb_devno, DEVICE_COUNT);
+	scullb_device = NULL;
+	printk(KERN_INFO "scullbuffer: Peace (Module unloaded).\n");
+}
+
 module_init(scullb_init);
-module_exit(scullb_release);	
+module_exit(scullb_cleanup);	
+
+

@@ -2,6 +2,7 @@
 #!/bin/sh
 module="buffer"
 device="scullbuffer"
+group="root"
 
 # invoke rmmod with all arguments we got
 sudo rmmod ${module}

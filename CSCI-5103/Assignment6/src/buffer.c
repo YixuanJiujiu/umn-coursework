@@ -10,6 +10,7 @@
 #include <linux/init.h>		// for module_init, module_exit
 #include <linux/semaphore.h>	// for init_MUTEX
 #include <linux/sched.h>	// for signal_pending
+#include <asm/uaccess.h>	// for copy_to_user, copy_from_user..
 //#include "scull.h"		// local definitions
 
 #define init_MUTEX(_m) sema_init(_m, 1)
@@ -18,7 +19,7 @@ int MAJOR_NUM = 247;
 int MINOR_NUM = 0;
 #define DEVICE_COUNT 1
 #define NITEMS 20
-#define BUF_SIZE 1024
+#define BUF_SIZE sizeof(char) * 32 * 20
 
 MODULE_AUTHOR("Maxwell Pung");
 MODULE_LICENSE("GPL");
@@ -50,7 +51,7 @@ static int scullb_open(struct inode *inode, struct file *filp)
 	dev = container_of(inode->i_cdev, struct scull_buffer, cdev);	// find appropriate device structure
 	filp->private_data = dev;	// for easy access to scull_buffer struct in future
 
-	printk(KERN_INFO "scullbuffer: entering critical region in open...\n");
+	//printk(KERN_INFO "scullbuffer: entering critical region in open...\n");
 	if (down_interruptible(&dev->sem))	
 	{
 		return -ERESTARTSYS;
@@ -60,16 +61,16 @@ static int scullb_open(struct inode *inode, struct file *filp)
 	if (filp->f_mode & FMODE_READ)
 	{
                 dev->num_consumers++;
-		printk(KERN_INFO "scullbuffer: There are now %d consumers.\n", dev->num_consumers);
+		//printk(KERN_INFO "scullbuffer: There are now %d consumers.\n", dev->num_consumers);
 	}
         if (filp->f_mode & FMODE_WRITE)
 	{
                 dev->num_producers++;
-		printk(KERN_INFO "scullbuffer: There are now %d producers.\n", dev->num_producers);
+		//printk(KERN_INFO "scullbuffer: There are now %d producers.\n", dev->num_producers);
 
 	}
         up(&dev->sem);
-	printk(KERN_INFO "scullbuffer: leaving critical region in open...\n");
+	//printk(KERN_INFO "scullbuffer: leaving critical region in open...\n");
         return nonseekable_open(inode, filp);	// seeking is not necessary
 }
 
@@ -83,13 +84,13 @@ static int scullb_release(struct inode *inode, struct file *filp)
         if (filp->f_mode & FMODE_READ)		// then a consumer has finished consuming
 	{	
                 dev->num_consumers--;
-		printk(KERN_INFO "scullbuffer: There are now %d consumers after release.\n", dev->num_consumers);
+		//printk(KERN_INFO "scullbuffer: There are now %d consumers after release.\n", dev->num_consumers);
 
 	}
         if (filp->f_mode & FMODE_WRITE)		// then a producer has finished producing
 	{
                 dev->num_producers--;
-		printk(KERN_INFO "scullbuffer: There are now %d producers after release.\n", dev->num_producers);
+		//printk(KERN_INFO "scullbuffer: There are now %d producers after release.\n", dev->num_producers);
 
 	}
         if (dev->num_consumers + dev->num_producers == 0) 	// then all producers & consumers are finished w/ their work
@@ -104,6 +105,7 @@ static int scullb_release(struct inode *inode, struct file *filp)
 // read 
 static ssize_t scullb_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 {
+	printk(KERN_INFO "scullbuffer: read has been called...\n");
 	struct scull_buffer *dev = filp->private_data;
 
 	// Acquire semaphore unless interrupted.
@@ -116,6 +118,7 @@ static ssize_t scullb_read(struct file *filp, char __user *buf, size_t count, lo
 	// if no data in input buffer & no producer procs have scullbuffer open, return 0
 	while (dev->rp == dev->wp)
 	{
+		up(&dev->sem);
 		if (filp->f_flags & O_NONBLOCK)
 		{
 			return -EAGAIN;
@@ -132,6 +135,7 @@ static ssize_t scullb_read(struct file *filp, char __user *buf, size_t count, lo
 	}
 	// if EOF, return immeditaely w/ 0
 	// if data in input buffer, return immediately
+	printk(KERN_INFO "scullbuffer: there is data in buffer to be consumed...\n");
 	if (dev->wp > dev->rp)
 	{
 		count = min(count, (size_t)(dev->wp - dev->rp));
@@ -158,6 +162,7 @@ static ssize_t scullb_read(struct file *filp, char __user *buf, size_t count, lo
 
 static int scullb_getwritespace(struct scull_buffer *dev, struct file *filp)
 {
+	printk("scullbuffer: getwritespace has been called...\n");
         while (spacefree(dev) == 0) 
 	{ 
                 DEFINE_WAIT(wait);
@@ -190,6 +195,7 @@ static int scullb_getwritespace(struct scull_buffer *dev, struct file *filp)
 
 static int spacefree(struct scull_buffer *dev)
 {
+	printk("scullbuffer: spacefree has been called...\n");
         if (dev->rp == dev->wp)
 	{
                 return dev->buffer_size - 1;
@@ -201,21 +207,26 @@ static int spacefree(struct scull_buffer *dev)
 // never make write call wait for data transmission before returning
 static ssize_t scullb_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
 {
+	printk(KERN_INFO "write has been called...\n");
 	struct scull_buffer *dev = filp->private_data;
 	int result;
 
 	if (down_interruptible(&dev->sem))
 	{
+		printk(KERN_ALERT "scullbuffer: in write, down_interruptible failed");
 		return -ERESTARTSYS;
 	}
 
 	result = scullb_getwritespace(dev, filp);
+	printk(KERN_INFO "scull buffer wite: received %d from getwritespace...\n", result);
 	if (result)
 	{
 		return result;
 	}
-	printk("scull buffer: space is available to write to...\n");
+	printk(KERN_INFO "scullbuffer write: space is available to write to...\n");
+	printk(KERN_INFO "scullbuffer write: count parameter - %d\n", (int)count);
 	count = min(count, (size_t)spacefree(dev));
+	printk(KERN_INFO "sculbuffer write: count parameter after call to min - %d\n", (int)count);
 	if (dev->wp >= dev->rp)
 	{
 		count = min(count, (size_t)(dev->buffer_end - dev->wp));
@@ -224,21 +235,22 @@ static ssize_t scullb_write(struct file *filp, const char __user *buf, size_t co
 	{
 		count = min(count, (size_t)(dev->rp - dev->wp - 1));
 	}
-	/*printk("scullbuffer: accepting %li bytes to %p from %p\n", (long)count, dev->wp, buf);
+	printk(KERN_INFO "scullbuffer: accepting %li bytes to %p from %p\n", (long)count, dev->wp, buf);
 	if (copy_from_user(dev->wp, buf, count))
 	{
 		up (&dev->sem);
 		return -EFAULT;
 	}
 	dev->wp += count;
-	if (dev->wp == dev->end)
+	if (dev->wp == dev->buffer_end)
 	{
 		dev->wp = dev->buffer;
-	}*/
-	printk("(scull_p_write) dev->wp:%p ::: dev->rp:%p\n", dev->wp, dev->rp);
+	}
+	printk(KERN_INFO "scullbuffer: (scull_p_write) dev->wp:%p ::: dev->rp:%p\n", dev->wp, dev->rp);
 	up(&dev->sem);
 	wake_up_interruptible(&dev->consumer_queue);
-	printk("scullbuffer: leaving scull_p_write...\n");
+	//printk("scullbuffer: leaving scull_p_write...\n");
+	printk(KERN_INFO "scullbuffer: (scull_p_write) write complete, consumer wakeup complete");
 	return count;
 	// if space in output buffer, return w/ out delay (must accept atleast 1 byte)
 	// if output buffer full, block until some space is freed

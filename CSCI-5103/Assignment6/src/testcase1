@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "***** RUNNING TESTCASE1 NOW *****"
+consumer 1 &
+producer BLACK 1 &
+wait # for producer & consumer to finish
+echo "**** RUNNING TESTCASE1 COMPLETE *****"
